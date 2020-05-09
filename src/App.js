@@ -1,8 +1,7 @@
 import React from 'react';
-import { Counter } from './components/counter/Counter';
 import './App.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { TypeSelector } from './components/type-selector/TypeSelector';
+import { PokemonSelector } from './components/pokemon-selector/PokemonSelector'; 
 import 'semantic-ui-css/semantic.min.css'
 
 function App() {
@@ -19,7 +18,7 @@ function App() {
           <Kacsa />
         </Route>
         <Route path="/">
-          <TypeSelector />
+          <PokemonSelector />
         </Route>
       </Switch>
     </ BrowserRouter>
