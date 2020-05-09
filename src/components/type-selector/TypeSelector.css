@@ -1,0 +1,11 @@
+.even {
+    background-color: gray;
+}
+
+.even > .text {
+    color: blue;
+}
+
+#typesDropdown.active .default.text {
+    color: black;
+}
