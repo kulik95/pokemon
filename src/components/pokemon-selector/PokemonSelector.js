@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Segment } from 'semantic-ui-react';
 import { Search } from '../search/Search';
+import { PokemonList } from '../pokemon-list/PokemonList';
 
 export const PokemonSelector = () => {
     return <Grid stackable columns={2}>
@@ -11,7 +12,7 @@ export const PokemonSelector = () => {
         </Grid.Column>
         <Grid.Column>
             <Segment>
-                <span>results table</ span>
+                <PokemonList />
             </Segment>
         </Grid.Column>
     </Grid>
