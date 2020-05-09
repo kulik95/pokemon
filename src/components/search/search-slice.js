@@ -3,26 +3,34 @@ import { fetchPokemonsForType as fetchPokemonsForTypeUtil } from '../../utils/po
 
 export const searchSlice = createSlice({
     name: 'search',
-    initialState: { searchExpression: '', type: '', caughtOnly: false, pokemons: [], caughtPokemons: [] },
+    initialState: { searchExpression: '', type: '', caughtOnly: false, pokemons: [], caughtPokemons: [], pokemonsFiltered: [] },
     reducers: {
-        updateSearchExpression: (state, action) => {
-            state.searchExpression = action.payload;
+        updateFilter: (state, action) => {
+            state.searchExpression = action.payload.searchExpression || state.searchExpression;
+            state.caughtOnly = action.payload.caughtOnly || state.caughtOnly;
+
+            const pokemonsFilteredBySearchExpression = state.searchExpression.length > 0 ? 
+                state.pokemons.filter(pokemon => pokemon.name.includes(state.searchExpression)) : state.pokemons;
+
+            const pokemonsFilteredByCaughtOnlyAndSearch = state.caughtOnly ? pokemonsFilteredBySearchExpression.filter(pokemon => {
+                return true;
+            }) : pokemonsFilteredBySearchExpression;
+
+            state.pokemonsFiltered = pokemonsFilteredByCaughtOnlyAndSearch;
         },
         updateType: (state, action) => {
             state.type = action.payload;
             state.searchExpression = '';
             state.caughtOnly = false;
         },
-        updateCaughtOnly: (state, action) => {
-            state.caughtOnly = action.payload;
-        },
         updatePokemons: (state, action) => {
             state.pokemons = action.payload;
+            state.pokemonsFiltered = action.payload;
         }
     }
 });
 
-export const { updateSearchExpression, updateType, updateCaughtOnly, updatePokemons } = searchSlice.actions;
+export const { updateFilter, updateType, updatePokemons } = searchSlice.actions;
 
 const getTypeNumberFromTypeURL = typeURL => {
     const typeURLParts = typeURL.split('/').filter(part => !!part);
@@ -40,5 +48,6 @@ export const fetchPokemonsForType = type => dispatch => {
 };
 
 export const selectPokemons = state => state.search.pokemons;
+export const selectPokemonsFiltered = state => state.search.pokemonsFiltered;
 
 export default searchSlice.reducer;
