@@ -9,14 +9,8 @@ const getDropdownItemClass = index => {
     return index % 2 === 0 ? 'even' : '';
 };
 
-const getSelectedTypeLabel = (url, types) => {
-    const selectedType = types.find(type => type.url === url);
-    return selectedType && selectedType.name || '';
-};
-
 export const TypeSelector = () => {
     const [types, setTypes] = useState([]);
-    const [selectedType, setSelectedType] = useState('');
 
     useEffect(() => {
         fetchPokemonTypes().then(pokemonTypes => setTypes(pokemonTypes));
@@ -30,10 +24,6 @@ export const TypeSelector = () => {
         active: false
     }));
 
-    const onValueChange = (value) => {
-
-    };
-
     return <>
         <Dropdown
             id='typesDropdown'
@@ -41,7 +31,6 @@ export const TypeSelector = () => {
             fluid
             selection
             selectOnBlur={false}
-            onChange={(event, data) => { onValueChange(event.value); }}
             options={pokemonTypeOptions}
         /></>
 };
