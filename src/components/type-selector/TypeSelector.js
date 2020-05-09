@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPokemonTypes } from '../../utils/pokemon-api';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectTypes, fetchTypes } from './typeSlice';
 import { Dropdown } from 'semantic-ui-react';
 import './TypeSelector.css';
 
@@ -10,10 +11,11 @@ const getDropdownItemClass = index => {
 };
 
 export const TypeSelector = () => {
-    const [types, setTypes] = useState([]);
+    const types = useSelector(selectTypes);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchPokemonTypes().then(pokemonTypes => setTypes(pokemonTypes));
+        fetchTypes(dispatch);
     }, []);
 
     const pokemonTypeOptions = types.map((type, index) => ({
