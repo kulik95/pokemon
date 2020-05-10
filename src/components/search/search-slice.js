@@ -53,18 +53,26 @@ export const searchSlice = createSlice({
     loading: false,
   },
   reducers: {
-    updateFilter: (state, action) => {
-      state.searchExpression =
-        action.payload.searchExpression === undefined
-          ? state.searchExpression
-          : action.payload.searchExpression;
-      state.caughtOnly =
-        action.payload.caughtOnly === undefined
-          ? state.caughtOnly
-          : action.payload.caughtOnly;
-      state.type =
-        action.payload.type === undefined ? state.type : action.payload.type;
-
+    updateType: (state, action) => {
+      state.type = action.payload.type;
+      state.pokemonsFiltered = filterPokemons(
+        state.pokemons,
+        state.searchExpression,
+        state.type,
+        state.caughtOnly
+      );
+    },
+    updateSearchExpression: (state, action) => {
+      state.searchExpression = action.payload.searchExpression;
+      state.pokemonsFiltered = filterPokemons(
+        state.pokemons,
+        state.searchExpression,
+        state.type,
+        state.caughtOnly
+      );
+    },
+    updateCaughtOnly: (state, action) => {
+      state.caughtOnly = action.payload.caughtOnly;
       state.pokemonsFiltered = filterPokemons(
         state.pokemons,
         state.searchExpression,
@@ -101,8 +109,9 @@ export const searchSlice = createSlice({
 });
 
 export const {
-  updateFilter,
   updateType,
+  updateSearchExpression,
+  updateCaughtOnly,
   updatePokemons,
   updatePokemonStatus,
   updateLoading,
@@ -115,15 +124,14 @@ export const fetchAllPokemonsByType = (type) => (dispatch, getState) => {
 
     fetchPokemonsByTypes(types).then((pokemons) => {
       dispatch(updatePokemons(pokemons));
-      dispatch(updateFilter({ type: type }));
+      dispatch(updateType({ type: type }));
       dispatch(updateLoading({ loading: false }));
     });
   } else {
-    dispatch(updateFilter({ type: type }));
+    dispatch(updateType({ type: type }));
   }
 };
 
-export const selectPokemons = (state) => state.search.pokemons;
 export const selectPokemonsFiltered = (state) => state.search.pokemonsFiltered;
 export const selectCaughtOnly = (state) => state.search.caughtOnly;
 export const selectSearchExpression = (state) => state.search.searchExpression;
