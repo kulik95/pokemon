@@ -10,7 +10,7 @@ export const PokemonList = () => {
   const pokemons = useSelector(selectPokemonsFiltered);
   const loading = useSelector(selectLoading);
   const pokemonRows = pokemons.map((pokemon) => (
-    <PokemonListRow pokemon={pokemon} />
+    <PokemonListRow key={pokemon.name} pokemon={pokemon} />
   ));
 
   const headerRow = (

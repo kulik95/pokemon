@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  fetchPokemonsForType as fetchPokemonsForTypeUtil,
-  fetchPokemonsForTypes,
-} from "../../utils/pokemon-api";
+import { fetchPokemonsByTypes } from "../../utils/pokemon-api";
 
 const intersection = (setA, setB) => {
   let _intersection = new Set();
@@ -14,6 +11,36 @@ const intersection = (setA, setB) => {
   return _intersection;
 };
 
+const filterPokemons = (pokemons, searchExpression, type, caughtOnly) => {
+  const pokemonsFilteredBySearchExpression =
+    searchExpression.length > 0
+      ? pokemons.filter((pokemon) => pokemon.name.includes(searchExpression))
+      : pokemons;
+
+  const pokemonsFilteredByCaughtOnly = caughtOnly
+    ? pokemons.filter((pokemon) => {
+        return pokemon.caught;
+      })
+    : pokemons;
+
+  const pokemonsFilteredByType =
+    type && type !== "all"
+      ? pokemons.filter((p) =>
+          p.types.find((pokemonType) => pokemonType.url === type)
+        )
+      : pokemons;
+
+  let filtersIntersection = intersection(
+    intersection(
+      new Set(pokemonsFilteredBySearchExpression),
+      new Set(pokemonsFilteredByType)
+    ),
+    new Set(pokemonsFilteredByCaughtOnly)
+  );
+
+  return new Array(...filtersIntersection.values());
+};
+
 export const searchSlice = createSlice({
   name: "search",
   initialState: {
@@ -22,7 +49,6 @@ export const searchSlice = createSlice({
     type: "",
     caughtOnly: false,
     pokemons: [],
-    caughtPokemons: [],
     pokemonsFiltered: [],
     loading: false,
   },
@@ -39,35 +65,12 @@ export const searchSlice = createSlice({
       state.type =
         action.payload.type === undefined ? state.type : action.payload.type;
 
-      const pokemonsFilteredBySearchExpression =
-        state.searchExpression.length > 0
-          ? state.pokemons.filter((pokemon) =>
-              pokemon.name.includes(state.searchExpression)
-            )
-          : state.pokemons;
-
-      const pokemonsFilteredByCaughtOnly = state.caughtOnly
-        ? state.pokemons.filter((pokemon) => {
-            return pokemon.caught;
-          })
-        : state.pokemons;
-
-      const pokemonsFilteredByType =
-        state.type && state.type !== "all"
-          ? state.pokemons.filter((p) =>
-              p.types.find((type) => type.url === state.type)
-            )
-          : state.pokemons;
-
-      let filtersIntersection = intersection(
-        intersection(
-          new Set(pokemonsFilteredBySearchExpression),
-          new Set(pokemonsFilteredByType)
-        ),
-        new Set(pokemonsFilteredByCaughtOnly)
+      state.pokemonsFiltered = filterPokemons(
+        state.pokemons,
+        state.searchExpression,
+        state.type,
+        state.caughtOnly
       );
-
-      state.pokemonsFiltered = new Array(...filtersIntersection.values());
     },
     updatePokemons: (state, action) => {
       state.pokemons = action.payload;
@@ -102,50 +105,16 @@ export const {
   updateType,
   updatePokemons,
   updatePokemonStatus,
-  updateLoading
+  updateLoading,
 } = searchSlice.actions;
-
-const getTypeNumberFromTypeURL = (typeURL) => {
-  const typeURLParts = typeURL.split("/").filter((part) => !!part);
-  return typeURLParts[typeURLParts.length - 1];
-};
-
-export const fetchPokemonsForType = (type) => (dispatch) => {
-  dispatch(updateType(type));
-  const typeNumber = getTypeNumberFromTypeURL(type);
-  fetchPokemonsForTypeUtil(typeNumber).then((pokemons) => {
-    dispatch(updatePokemons(pokemons));
-  });
-};
 
 export const fetchAllPokemonsByType = (type) => (dispatch, getState) => {
   if (!getState().search.pokemonsLoaded) {
     dispatch(updateLoading({ loading: true }));
     const types = getState().type.types;
-    const typeNumbers = types.map((type) => getTypeNumberFromTypeURL(type.url));
-    fetchPokemonsForTypes(typeNumbers).then((pokemonsByTypes) => {
-      const allPokemons = [];
-      pokemonsByTypes.forEach((pokemons, index) => {
-        const pokemonsWithType = pokemons.map((p) => {
-          p.types = [types[index]];
-          return p;
-        });
-        allPokemons.push(...pokemonsWithType);
-      });
 
-      const pokemonsGroupedByName = new Map();
-
-      allPokemons.forEach((pokemon) => {
-        if (!pokemonsGroupedByName.get(pokemon.name)) {
-          pokemonsGroupedByName.set(pokemon.name, pokemon);
-        } else {
-          pokemonsGroupedByName.get(pokemon.name).types.push(pokemon.types[0]);
-        }
-      });
-
-      const allPokemonsUnique = new Array(...pokemonsGroupedByName.values());
-
-      dispatch(updatePokemons(allPokemonsUnique));
+    fetchPokemonsByTypes(types).then((pokemons) => {
+      dispatch(updatePokemons(pokemons));
       dispatch(updateFilter({ type: type }));
       dispatch(updateLoading({ loading: false }));
     });
