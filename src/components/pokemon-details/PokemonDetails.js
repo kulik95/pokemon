@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Segment, Icon } from "semantic-ui-react";
+import { Grid, Segment, Icon, Table } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPokemon,
@@ -11,6 +11,27 @@ import { selectIsPokemonCaught } from "../search/search-slice";
 import { PokemonActionButton } from "../pokemon-action-button/PokemonActionButton";
 
 import "./PokemonDetails.css";
+
+const capitalize = (text) => {
+  const firstLetterUpperCase = text[0].toUpperCase();
+  const capitalizedText = firstLetterUpperCase + text.slice(1);
+  return capitalizedText;
+};
+
+const attributesToShow = {
+  name: { label: "Name", getter: (details) => capitalize(details.name) },
+  weight: { label: "Weight", getter: (details) => details.weight },
+  height: { label: "Height", getter: (details) => details.height },
+  status: { label: "Status", getter: () => "-" },
+  abilities: {
+    label: "Abilities",
+    getter: (details) =>
+      details.abilities
+        .filter((ability) => !ability.is_hidden)
+        .map((ability) => ability.ability.name)
+        .join(", "),
+  },
+};
 
 const displayedImage = "front_default";
 
@@ -45,6 +66,21 @@ export const PokemonDetails = () => {
     />
   ) : null;
 
+  const detailsTable = pokemonDetails.name ? (
+    <Table basic="very">
+      <Table.Body>
+        {Object.keys(attributesToShow).map((attribute) => (
+          <Table.Row>
+            <Table.Cell>{attributesToShow[attribute].label}</Table.Cell>
+            <Table.Cell>
+              {attributesToShow[attribute].getter(pokemonDetails)}
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  ) : null;
+
   return (
     <>
       <Grid stackable columns={2} id="pokemonAppContainer">
@@ -56,7 +92,7 @@ export const PokemonDetails = () => {
         </Grid.Column>
         <Grid.Column>
           <Segment id="pokemonDetailsSegment">
-            <span>{selectedPokemon}</span>
+            {detailsTable}
             <PokemonActionButton
               pokemon={{ name: selectedPokemon, caught: pokemonCaught }}
             />
