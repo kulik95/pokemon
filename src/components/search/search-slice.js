@@ -6,14 +6,14 @@ export const searchSlice = createSlice({
     initialState: { searchExpression: '', type: '', caughtOnly: false, pokemons: [], caughtPokemons: [], pokemonsFiltered: [] },
     reducers: {
         updateFilter: (state, action) => {
-            state.searchExpression = action.payload.searchExpression || state.searchExpression;
-            state.caughtOnly = action.payload.caughtOnly || state.caughtOnly;
+            state.searchExpression = action.payload.searchExpression === undefined ? state.searchExpression : action.payload.searchExpression;
+            state.caughtOnly = action.payload.caughtOnly === undefined ? state.caughtOnly : action.payload.caughtOnly;
 
             const pokemonsFilteredBySearchExpression = state.searchExpression.length > 0 ? 
                 state.pokemons.filter(pokemon => pokemon.name.includes(state.searchExpression)) : state.pokemons;
 
             const pokemonsFilteredByCaughtOnlyAndSearch = state.caughtOnly ? pokemonsFilteredBySearchExpression.filter(pokemon => {
-                return true;
+                return new Set(state.caughtPokemons).has(pokemon);
             }) : pokemonsFilteredBySearchExpression;
 
             state.pokemonsFiltered = pokemonsFilteredByCaughtOnlyAndSearch;
