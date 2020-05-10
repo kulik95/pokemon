@@ -8,6 +8,7 @@ import {
   fetchPokemonDetails,
 } from "./details-slice";
 import { selectIsPokemonCaught } from "../search/search-slice";
+import { PokemonActionButton } from "../pokemon-action-button/PokemonActionButton";
 
 import "./PokemonDetails.css";
 
@@ -30,7 +31,8 @@ export const PokemonDetails = () => {
         history.push("/");
       }}
     >
-      <Icon name="arrow left" />Back to search
+      <Icon name="arrow left" />
+      Back to search
     </span>
   );
 
@@ -55,6 +57,9 @@ export const PokemonDetails = () => {
         <Grid.Column>
           <Segment id="pokemonDetailsSegment">
             <span>{selectedPokemon}</span>
+            <PokemonActionButton
+              pokemon={{ name: selectedPokemon, caught: pokemonCaught }}
+            />
           </Segment>
         </Grid.Column>
       </Grid>
