@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectTypes, fetchTypes } from './typeSlice';
-import { fetchPokemonsForType } from '../search/search-slice';
+import { fetchPokemonsForType, fetchAllPokemonsByType } from '../search/search-slice';
 import { Dropdown } from 'semantic-ui-react';
 import './TypeSelector.css';
 
@@ -36,7 +36,7 @@ export const TypeSelector = () => {
             selectOnBlur={false}
             onChange={(event, data) => {
                 debugger;
-                dispatch(fetchPokemonsForType(data.value));
+                dispatch(fetchAllPokemonsByType(data.value, types));
             }}
             options={pokemonTypeOptions}
         /></>
