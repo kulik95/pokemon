@@ -3,13 +3,18 @@ const typesURL = "type";
 const typeURL = "type";
 const pokemonURL = "pokemon";
 
+/**
+ * Fetches list of pokemon types
+ *
+ * @return {Promise<Array>} List of pokemon types.
+ */
 export const fetchPokemonTypes = async () => {
   const response = await fetch(`${pokeApiBaseURL}${typesURL}`);
   const resultsJSON = await response.json();
   return resultsJSON.results;
 };
 
-export const fetchPokemonsForType = async (type) => {
+const fetchPokemonsForType = async (type) => {
   if (type === "all") {
     return [];
   }
@@ -18,7 +23,7 @@ export const fetchPokemonsForType = async (type) => {
   return resultsJSON.pokemon.map((pokemon) => pokemon.pokemon);
 };
 
-export const fetchPokemonsForTypes = async (types) => {
+const fetchPokemonsForTypes = async (types) => {
   const pokemonsByType = await Promise.all(
     types.map((type) => fetchPokemonsForType(type))
   );
@@ -30,6 +35,12 @@ const getTypeNumberFromTypeURL = (typeURL) => {
   return typeURLParts[typeURLParts.length - 1];
 };
 
+/**
+ * Fetches list of pokemons for each type, aggregates types to pokemons
+ *
+ * @param {Array<string>} types List of pokemon types.
+ * @return {Promise<Array>} List of pokemons with types aggregated (some pokemons have 2 types).
+ */
 export const fetchPokemonsByTypes = (types) => {
   const typeNumbers = types.map((type) => getTypeNumberFromTypeURL(type.url));
   return fetchPokemonsForTypes(typeNumbers).then((pokemonsByTypes) => {
@@ -57,6 +68,12 @@ export const fetchPokemonsByTypes = (types) => {
   });
 };
 
+/**
+ * Fetches details of a pokemon by name
+ *
+ * @param {string} pokemon Name of the pokemon.
+ * @return {Promise<Object>} The details of the pokemon.
+ */
 export const fetchPokemonDetail = (pokemon) => {
   return fetch(`${pokeApiBaseURL}${pokemonURL}/${pokemon}`).then((response) =>
     response.json()

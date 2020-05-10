@@ -11,6 +11,15 @@ const intersection = (setA, setB) => {
   return _intersection;
 };
 
+/**
+ * Filters list of pokemons based on searchExpression, type and whether it is caught or not
+ *
+ * @param {Array} pokemons List of all pokemons.
+ * @param {string} searchExpression Search expression.
+ * @param {string} type Pokemon type.
+ * @param {boolean} caughtOnly List only caught pokemons.
+ * @return {Array} List of pokemons filtered.
+ */
 const filterPokemons = (pokemons, searchExpression, type, caughtOnly) => {
   const pokemonsFilteredBySearchExpression =
     searchExpression.length > 0
@@ -85,6 +94,9 @@ export const searchSlice = createSlice({
       state.pokemonsFiltered = action.payload;
       state.pokemonsLoaded = true;
     },
+    /**
+     * Update caught status of pokemon in both the list of all pokemons and in the list of filtered pokemons
+     */
     updatePokemonStatus: (state, action) => {
       const pokemonIndex = state.pokemons.findIndex(
         (pokemon) => pokemon.name === action.payload.name

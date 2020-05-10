@@ -70,7 +70,7 @@ export const PokemonDetails = () => {
     <Table basic="very">
       <Table.Body>
         {Object.keys(attributesToShow).map((attribute) => (
-          <Table.Row>
+          <Table.Row key={attribute}>
             <Table.Cell>{attributesToShow[attribute].label}</Table.Cell>
             <Table.Cell>
               {attributesToShow[attribute].getter(pokemonDetails)}
