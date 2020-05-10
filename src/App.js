@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { PokemonSelector } from "./components/pokemon-selector/PokemonSelector";
+import { PokemonDetails } from './components/pokemon-details/PokemonDetails';
 import "semantic-ui-css/semantic.min.css";
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 
       <Switch>
         <Route path="/details">
-          <span>Pokemon details</span>
+          <PokemonDetails />
         </Route>
         <Route path="/">
           <PokemonSelector />
