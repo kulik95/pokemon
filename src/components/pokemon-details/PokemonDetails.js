@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Segment } from "semantic-ui-react";
+import { Grid, Segment, Icon } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPokemon,
@@ -30,7 +30,7 @@ export const PokemonDetails = () => {
         history.push("/");
       }}
     >
-      Back to search
+      <Icon name="arrow left" />Back to search
     </span>
   );
 
@@ -45,10 +45,12 @@ export const PokemonDetails = () => {
 
   return (
     <>
-      {backLink}
       <Grid stackable columns={2} id="pokemonAppContainer">
         <Grid.Column>
-          <Segment id="pokemonImageSegment">{pokemonImage}</Segment>
+          <Segment id="pokemonImageSegment">
+            {backLink}
+            {pokemonImage}
+          </Segment>
         </Grid.Column>
         <Grid.Column>
           <Segment id="pokemonDetailsSegment">
