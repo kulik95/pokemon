@@ -47,7 +47,7 @@ export const searchSlice = createSlice({
 
       const pokemonsFilteredByCaughtOnly = state.caughtOnly
         ? state.pokemons.filter((pokemon) => {
-            return new Set(state.caughtPokemons).has(pokemon);
+            return pokemon.caught;
           })
         : state.pokemons;
 
@@ -73,10 +73,17 @@ export const searchSlice = createSlice({
       state.pokemonsFiltered = action.payload;
       state.pokemonsLoaded = true;
     },
+    updatePokemonStatus: (state, action) => {
+        const pokemonIndex = state.pokemons.findIndex(pokemon => pokemon.name === action.payload.name);
+        const pokemon = state.pokemons[pokemonIndex];
+        state.pokemons.splice(pokemonIndex, 1, { ...pokemon, caught: action.payload.caught });
+        const pokemonFilteredIndex = state.pokemonsFiltered.findIndex(pokemon => pokemon.name === action.payload.name);
+        state.pokemonsFiltered.splice(pokemonFilteredIndex, 1, { ...pokemon, caught: action.payload.caught });
+    }
   },
 });
 
-export const { updateFilter, updateType, updatePokemons } = searchSlice.actions;
+export const { updateFilter, updateType, updatePokemons, updatePokemonStatus } = searchSlice.actions;
 
 const getTypeNumberFromTypeURL = (typeURL) => {
   const typeURLParts = typeURL.split("/").filter((part) => !!part);

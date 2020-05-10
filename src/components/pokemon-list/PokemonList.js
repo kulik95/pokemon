@@ -1,7 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Grid, Segment, Button } from "semantic-ui-react";
-import { selectPokemonsFiltered } from "../search/search-slice";
+import {
+  selectPokemonsFiltered,
+  updatePokemonStatus,
+} from "../search/search-slice";
 import "./PokemonList.css";
 
 const capitalize = (text) => {
@@ -43,6 +46,7 @@ const PokemonInfoHeader = () => {
 
 export const PokemonList = () => {
   const pokemons = useSelector(selectPokemonsFiltered);
+  const dispatch = useDispatch();
   const pokemonRows = (pokemons || []).map((pokemon) => (
     <Grid.Row key={pokemon.url}>
       <Grid.Column width={12}>
@@ -53,6 +57,14 @@ export const PokemonList = () => {
           className="pokemonActionButton"
           color={pokemon.caught ? "yellow" : "blue"}
           fluid
+          onClick={() =>
+            dispatch(
+              updatePokemonStatus({
+                name: pokemon.name,
+                caught: !pokemon.caught,
+              })
+            )
+          }
         >
           {pokemon.caught ? "Release" : "Catch"}
         </Button>
