@@ -1,0 +1,14 @@
+#pokemonSearchSegment {
+  border: none;
+  box-shadow: none;
+}
+
+#pokemonListSegment {
+  border: none;
+  box-shadow: none;
+}
+
+#pokemonAppContainer {
+  margin-left: 6rem;
+  margin-right: 6rem;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Segment } from "semantic-ui-react";
 import { Search } from "../search/Search";
 import { PokemonList } from "../pokemon-list/PokemonList";
+import "./PokemonSelector.css";
 
 export const PokemonSelector = () => {
   return (
