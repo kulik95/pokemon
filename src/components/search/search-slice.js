@@ -49,5 +49,7 @@ export const fetchPokemonsForType = type => dispatch => {
 
 export const selectPokemons = state => state.search.pokemons;
 export const selectPokemonsFiltered = state => state.search.pokemonsFiltered;
+export const selectCaughtOnly = state => state.search.caughtOnly;
+export const selectSearchExpression = state => state.search.searchExpression;
 
 export default searchSlice.reducer;
