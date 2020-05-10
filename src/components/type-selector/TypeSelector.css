@@ -1,9 +1,9 @@
 .even {
-  background-color: gray;
+  background-color: lightgray;
 }
 
 .even > .text {
-  color: blue;
+  color: #7777aa;
 }
 
 #typesDropdown.active .default.text {

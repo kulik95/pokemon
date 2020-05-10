@@ -136,5 +136,9 @@ export const selectPokemonsFiltered = (state) => state.search.pokemonsFiltered;
 export const selectCaughtOnly = (state) => state.search.caughtOnly;
 export const selectSearchExpression = (state) => state.search.searchExpression;
 export const selectLoading = (state) => state.search.loading;
+export const selectIsPokemonCaught = (pokemonName) => (state) => {
+  const pokemon = state.search.pokemons.find((p) => p.name === pokemonName);
+  return pokemon && pokemon.caught;
+};
 
 export default searchSlice.reducer;

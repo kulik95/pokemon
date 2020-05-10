@@ -1,6 +1,8 @@
 import React from "react";
 import { Segment } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateSelectedPokemon } from "../pokemon-details/details-slice";
 
 const capitalize = (text) => {
   const firstLetterUpperCase = text[0].toUpperCase();
@@ -10,6 +12,7 @@ const capitalize = (text) => {
 
 export const PokemonInfo = (props) => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   return (
     <Segment.Group
@@ -18,6 +21,9 @@ export const PokemonInfo = (props) => {
       }`}
       horizontal
       onClick={() => {
+        dispatch(
+          updateSelectedPokemon({ selectedPokemon: props.pokemon.name })
+        );
         history.push(`/details/${props.pokemon.name}`);
       }}
     >

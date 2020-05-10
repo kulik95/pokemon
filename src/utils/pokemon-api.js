@@ -1,6 +1,7 @@
 const pokeApiBaseURL = "https://pokeapi.co/api/v2/";
 const typesURL = "type";
 const typeURL = "type";
+const pokemonURL = "pokemon";
 
 export const fetchPokemonTypes = async () => {
   const response = await fetch(`${pokeApiBaseURL}${typesURL}`);
@@ -54,4 +55,10 @@ export const fetchPokemonsByTypes = (types) => {
     const allPokemonsUnique = new Array(...pokemonsGroupedByName.values());
     return allPokemonsUnique;
   });
+};
+
+export const fetchPokemonDetail = (pokemon) => {
+  return fetch(`${pokeApiBaseURL}${pokemonURL}/${pokemon}`).then((response) =>
+    response.json()
+  );
 };
