@@ -12,9 +12,14 @@ const capitalize = (text) => {
 
 const PokemonInfo = (props) => {
   return (
-    <Segment.Group className="pokemonInfoSegmentGroup" horizontal>
+    <Segment.Group
+      className={`pokemonInfoSegmentGroup ${
+        props.pokemon.caught ? "yellow" : "blue"
+      }`}
+      horizontal
+    >
       <Segment className="pokemonInfoSegment" basic>
-        {capitalize(props.pokemon.name)}{" "}
+        {capitalize(props.pokemon.name)}
       </Segment>
       <Segment className="pokemonInfoSegment" basic>
         {props.pokemon.types.map((type) => type.name).join(", ")}
@@ -44,8 +49,12 @@ export const PokemonList = () => {
         <PokemonInfo pokemon={pokemon} />
       </Grid.Column>
       <Grid.Column width={4}>
-        <Button className="catchButton" fluid>
-          Catch
+        <Button
+          className="pokemonActionButton"
+          color={pokemon.caught ? "yellow" : "blue"}
+          fluid
+        >
+          {pokemon.caught ? "Release" : "Catch"}
         </Button>
       </Grid.Column>
     </Grid.Row>

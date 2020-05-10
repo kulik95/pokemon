@@ -5,14 +5,14 @@ import { PokemonList } from "../pokemon-list/PokemonList";
 
 export const PokemonSelector = () => {
   return (
-    <Grid stackable columns={2}>
+    <Grid stackable columns={2} id="pokemonAppContainer">
       <Grid.Column>
-        <Segment>
+        <Segment id="pokemonSearchSegment">
           <Search />
         </Segment>
       </Grid.Column>
       <Grid.Column>
-        <Segment>
+        <Segment id="pokemonListSegment">
           <PokemonList />
         </Segment>
       </Grid.Column>

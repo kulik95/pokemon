@@ -1,4 +1,4 @@
-.catchButton {
+.pokemonActionButton {
   height: 100%;
 }
 
@@ -15,6 +15,14 @@
 .ui.horizontal.segments.pokemonInfoSegmentGroup {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.ui.horizontal.segments.pokemonInfoSegmentGroup.yellow {
+  border-color: yellow;
+}
+
+.ui.horizontal.segments.pokemonInfoSegmentGroup.blue {
+  border-color: blue;
 }
 
 .ui.horizontal.segments.pokemonHeaderSegmentGroup {
