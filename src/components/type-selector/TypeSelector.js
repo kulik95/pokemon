@@ -28,6 +28,7 @@ export const TypeSelector = () => {
     }));
 
     return <>
+        <span>Types</ span>
         <Dropdown
             id='typesDropdown'
             placeholder={placeholderText}

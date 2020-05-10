@@ -9,3 +9,8 @@
 #typesDropdown.active .default.text {
     color: black;
 }
+
+#typesDropdown {
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+}

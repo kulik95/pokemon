@@ -6,6 +6,7 @@ import { CaughtToggle } from '../caught-toggle/CaughtToggle';
 
 export const Search = () => {
     return <>
+        <span>Filters</ span>
         <SearchBar />
         <TypeSelector />
         <CaughtToggle />
