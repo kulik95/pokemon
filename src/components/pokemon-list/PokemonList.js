@@ -12,12 +12,26 @@ const capitalize = (text) => {
 
 const PokemonInfo = (props) => {
   return (
-    <Segment.Group horizontal>
-      <Segment basic>{capitalize(props.pokemon.name)} </Segment>
-      <Segment basic>
+    <Segment.Group className="pokemonInfoSegmentGroup" horizontal>
+      <Segment className="pokemonInfoSegment" basic>
+        {capitalize(props.pokemon.name)}{" "}
+      </Segment>
+      <Segment className="pokemonInfoSegment" basic>
         {props.pokemon.types.map((type) => type.name).join(", ")}
       </Segment>
-      <Segment basic>-</Segment>
+      <Segment className="pokemonInfoSegment" basic>
+        {props.pokemon.caught ? "Caught" : "-"}
+      </Segment>
+    </Segment.Group>
+  );
+};
+
+const PokemonInfoHeader = () => {
+  return (
+    <Segment.Group className="pokemonHeaderSegmentGroup" horizontal>
+      <Segment className="pokemonHeaderSegment">Name</Segment>
+      <Segment className="pokemonHeaderSegment">Type</Segment>
+      <Segment className="pokemonHeaderSegment">Status</Segment>
     </Segment.Group>
   );
 };
@@ -38,10 +52,19 @@ export const PokemonList = () => {
   ));
 
   const headerRow = (
-    <Grid.Row>
-      <Grid.Column width={12}></Grid.Column>
+    <Grid.Row id="pokemonInfoHeaderRow">
+      <Grid.Column width={12}>
+        <PokemonInfoHeader />
+      </Grid.Column>
     </Grid.Row>
   );
 
-  return <Grid columns={2}>{pokemonRows}</Grid>;
+  return (
+    <>
+      <Grid columns={2}>
+        {headerRow}
+        {pokemonRows}
+      </Grid>
+    </>
+  );
 };
