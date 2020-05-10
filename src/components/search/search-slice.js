@@ -24,6 +24,7 @@ export const searchSlice = createSlice({
     pokemons: [],
     caughtPokemons: [],
     pokemonsFiltered: [],
+    loading: false,
   },
   reducers: {
     updateFilter: (state, action) => {
@@ -74,16 +75,35 @@ export const searchSlice = createSlice({
       state.pokemonsLoaded = true;
     },
     updatePokemonStatus: (state, action) => {
-        const pokemonIndex = state.pokemons.findIndex(pokemon => pokemon.name === action.payload.name);
-        const pokemon = state.pokemons[pokemonIndex];
-        state.pokemons.splice(pokemonIndex, 1, { ...pokemon, caught: action.payload.caught });
-        const pokemonFilteredIndex = state.pokemonsFiltered.findIndex(pokemon => pokemon.name === action.payload.name);
-        state.pokemonsFiltered.splice(pokemonFilteredIndex, 1, { ...pokemon, caught: action.payload.caught });
-    }
+      const pokemonIndex = state.pokemons.findIndex(
+        (pokemon) => pokemon.name === action.payload.name
+      );
+      const pokemon = state.pokemons[pokemonIndex];
+      state.pokemons.splice(pokemonIndex, 1, {
+        ...pokemon,
+        caught: action.payload.caught,
+      });
+      const pokemonFilteredIndex = state.pokemonsFiltered.findIndex(
+        (pokemon) => pokemon.name === action.payload.name
+      );
+      state.pokemonsFiltered.splice(pokemonFilteredIndex, 1, {
+        ...pokemon,
+        caught: action.payload.caught,
+      });
+    },
+    updateLoading: (state, action) => {
+      state.loading = action.payload.loading;
+    },
   },
 });
 
-export const { updateFilter, updateType, updatePokemons, updatePokemonStatus } = searchSlice.actions;
+export const {
+  updateFilter,
+  updateType,
+  updatePokemons,
+  updatePokemonStatus,
+  updateLoading
+} = searchSlice.actions;
 
 const getTypeNumberFromTypeURL = (typeURL) => {
   const typeURLParts = typeURL.split("/").filter((part) => !!part);
@@ -100,6 +120,7 @@ export const fetchPokemonsForType = (type) => (dispatch) => {
 
 export const fetchAllPokemonsByType = (type) => (dispatch, getState) => {
   if (!getState().search.pokemonsLoaded) {
+    dispatch(updateLoading({ loading: true }));
     const types = getState().type.types;
     const typeNumbers = types.map((type) => getTypeNumberFromTypeURL(type.url));
     fetchPokemonsForTypes(typeNumbers).then((pokemonsByTypes) => {
@@ -122,10 +143,11 @@ export const fetchAllPokemonsByType = (type) => (dispatch, getState) => {
         }
       });
 
-      const allPokemonsUniqe = new Array(...pokemonsGroupedByName.values());
+      const allPokemonsUnique = new Array(...pokemonsGroupedByName.values());
 
-      dispatch(updatePokemons(allPokemonsUniqe));
+      dispatch(updatePokemons(allPokemonsUnique));
       dispatch(updateFilter({ type: type }));
+      dispatch(updateLoading({ loading: false }));
     });
   } else {
     dispatch(updateFilter({ type: type }));
@@ -136,5 +158,6 @@ export const selectPokemons = (state) => state.search.pokemons;
 export const selectPokemonsFiltered = (state) => state.search.pokemonsFiltered;
 export const selectCaughtOnly = (state) => state.search.caughtOnly;
 export const selectSearchExpression = (state) => state.search.searchExpression;
+export const selectLoading = (state) => state.search.loading;
 
 export default searchSlice.reducer;

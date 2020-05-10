@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, Segment, Button } from "semantic-ui-react";
+import { Grid, Segment, Button, Loader, Dimmer } from "semantic-ui-react";
 import {
   selectPokemonsFiltered,
   updatePokemonStatus,
+  selectLoading,
 } from "../search/search-slice";
 import "./PokemonList.css";
 
@@ -46,8 +47,9 @@ const PokemonInfoHeader = () => {
 
 export const PokemonList = () => {
   const pokemons = useSelector(selectPokemonsFiltered);
+  const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
-  const pokemonRows = (pokemons || []).map((pokemon) => (
+  const pokemonRows = pokemons.map((pokemon) => (
     <Grid.Row key={pokemon.url}>
       <Grid.Column width={12}>
         <PokemonInfo pokemon={pokemon} />
@@ -80,12 +82,20 @@ export const PokemonList = () => {
     </Grid.Row>
   );
 
-  return (
-    <>
-      <Grid columns={2}>
-        {headerRow}
-        {pokemonRows}
-      </Grid>
-    </>
+  const loader = (
+    <Grid.Row>
+      <Dimmer active inverted>
+        <Loader inverted>Loading</Loader>
+      </Dimmer>
+    </Grid.Row>
   );
+
+  const list = (
+    <Grid columns={2}>
+      {headerRow}
+      {loading ? loader : pokemonRows}
+    </Grid>
+  );
+
+  return <>{list}</>;
 };
